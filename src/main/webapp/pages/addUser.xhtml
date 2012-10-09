@@ -5,10 +5,6 @@
 	  xmlns:p="http://primefaces.org/ui">
 
 <h:body>
-	<f:metadata>
-		<f:event type="preRenderView" listener="#{userView.preLoad}" />
-		<f:event type="preRenderView" listener="#{userView.insertPickList}" />
-	</f:metadata>
 	<ui:composition template="/WEB-INF/layout/layout.xhtml">
 		<ui:define name="title">#{msg['addUser.title']}</ui:define>
 		<ui:define name="content">
@@ -25,13 +21,6 @@
 						<h:outputLabel for="name" value="#{msg['addUser.name']} : " />
 						<p:inputText id="name" value="#{userView.name}" required="true" requiredMessage="#{msg['msgUser.msgRequiredName']}">
 							<f:validateLength minimum="2" />
-							<p:ajax event="blur" update="growl" />
-						</p:inputText>
-						<h:outputText></h:outputText>
-
-						<h:outputLabel for="surnames" value="#{msg['addUser.surnames']} : " />
-						<p:inputText id="surnames" value="#{userView.surnames}" required="true" requiredMessage="#{msg['msgUser.msgRequiredSurnames']}">
-							<f:validateLength minimum="5" />
 							<p:ajax event="blur" update="growl" />
 						</p:inputText>
 						<h:outputText></h:outputText>
@@ -65,30 +54,6 @@
 						</p:selectOneMenu>
 						<h:outputText></h:outputText>
 
-						<h:outputLabel for="status" value="#{msg['addUser.status']} : " />
-						<p:inputText id="status" value="#{userView.status}">
-							<p:ajax event="blur" update="growl" />
-						</p:inputText>
-						<h:outputText></h:outputText>
-
-						<h:outputLabel for="type" value="#{msg['addUser.type']} : " />
-						<p:selectOneMenu id="type" value="#{userView.type}" required="true" requiredMessage="#{msg['msgUser.msgRequiredType']}">
-							<f:selectItem itemLabel="#{msg['addUser.selectType']}" itemValue="" />
-							<f:selectItems value="#{userView.types}" />
-							<f:validateLength minimum="1" />
-							<p:ajax event="blur" update="growl"/>
-							<p:ajax event="change" update="pickList" />
-						</p:selectOneMenu>
-						<h:outputText></h:outputText>
-
-						<h:outputLabel for="activeSN" value="#{msg['addUser.active']} : " />
-						<p:selectBooleanButton id="activeSN" value="#{userView.activeSNBol}" onLabel="#{msg['button.yes']}" offLabel="#{msg['button.no']}" />
-						<h:outputText></h:outputText>
-
-						<h:outputLabel for="visibleSN" value="#{msg['addUser.visible']} : " />
-						<p:selectBooleanButton id="visibleSN" value="#{userView.visibleSNBol}" onLabel="#{msg['button.yes']}" offLabel="#{msg['button.no']}" />
-						<h:outputText></h:outputText>
-
 						<h:outputLabel for="role" value="#{msg['addUser.role']} : " />
 						<p:inputText id="role" disabled="true" value="#{userView.role.name}">
 							<p:ajax event="blur" update="growl" />
@@ -96,18 +61,6 @@
 						<p:commandButton id="effectsDialogButton" icon="ui-icon-search" title="#{msg['addUser.helpRole']}" onclick="dlgRol.show();" type="button" />
 						<p:message id="roleMsg" for="role" display="icon" />
 				</h:panelGrid>
-				
-				<h:panelGroup id="pickList">
-					<p:pickList id="listUser" value="#{userView.customers}" var="customer"
-							itemLabel="#{customer.name}" itemValue="#{customer}"
-							showSourceFilter="true" showTargetFilter="true"
-							filterMatchMode="contains" converter="clientePickListConverter"
-							styleClass="pickList" rendered="#{userView.type eq 'P'}">
-							
-							<f:facet name="sourceCaption">#{msg['addUser.availableCustomers']}</f:facet>
-							<f:facet name="targetCaption">#{msg['addUser.assignedCustomers']}</f:facet>
-					</p:pickList>
-				</h:panelGroup>
 				
 				<h:panelGrid columns="2">
 						<p:commandButton id="addUser" value="#{msg['button.submit']}" action="#{userView.addUser}" ajax="false" />
