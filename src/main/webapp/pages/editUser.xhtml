@@ -1,0 +1,102 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<f:metadata>
+		<f:event type="preRenderView" listener="#{userView.preLoad}" />
+	</f:metadata>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="title">#{msg['editUser.title']}</ui:define>
+		<ui:define name="content">
+			<h:form id="formUsu">
+				<p:panel id="panel" header="#{msg['editUser.header']}">
+					<h:panelGrid columns="3">
+
+						<h:outputLabel for="login" value="#{msg['editUser.login']} : " />
+						<p:inputText id="login" value="#{userView.selectedEntity.login}" disabled="true" required="true" requiredMessage="#{msg['msgUser.msgRequiredLogin']}">
+							<f:validateLength minimum="5" />
+							<p:ajax event="blur" update="growl" />
+						</p:inputText>
+						<h:outputText />
+
+						<h:outputLabel for="name" value="#{msg['editUser.name']} : " />
+						<p:inputText id="name" value="#{userView.selectedEntity.name}" required="true" requiredMessage="#{msg['msgUser.msgRequiredName']}">
+							<f:param></f:param>
+							<f:validateLength minimum="2" />
+							<p:ajax event="blur" update="growl" />
+						</p:inputText>
+						<h:outputText />
+
+						<h:outputLabel for="email" value="#{msg['editUser.email']} : " />
+						<p:inputText id="email" value="#{userView.selectedEntity.email}" required="true" requiredMessage="#{msg['msgUser.msgRequiredEmail']}">
+							<f:validateLength minimum="5" />
+							<p:ajax event="blur" update="growl" />
+						</p:inputText>
+						<h:outputText></h:outputText>
+						
+
+						<h:outputLabel for="password" value="#{msg['editUser.password']} : " />
+						<p:commandButton id="password" value="#{msg['button.update']}" title="Ayuda Rol" onclick="dlg.show();" type="button" />
+						<h:outputText />
+
+						<h:outputLabel for="language" value="#{msg['editUser.language']} : " />
+						<p:selectOneMenu id="language" value="#{userView.selectedEntity.language}" required="true" requiredMessage="#{msg['msgUser.msgRequiredLanguage']}">
+							<f:selectItem itemLabel="#{msg['editUser.selectLanguage']}" itemValue="" />
+							<f:selectItems value="#{userView.languages}" />
+						</p:selectOneMenu>
+						<h:outputText />
+
+						<h:outputLabel for="role" value="#{msg['editUser.role']} : " />
+						<p:inputText id="role" disabled="true" value="#{userView.selectedEntity.role.name}">
+							<p:ajax event="blur" update="growl" />
+						</p:inputText>
+
+						<p:commandButton id="effectsDialogButton" icon="ui-icon-search" title="#{msg['editUser.helpRole']}" onclick="dlgRol.show();" type="button" />
+						<p:message id="roleMsg" for="role" display="icon" />
+
+					</h:panelGrid>
+					<h:panelGrid columns="2">
+						<p:commandButton id="Update" value="#{msg['button.update']}" action="#{userView.updateEntity}" ajax="false" />
+						<p:commandButton id="delete" value="#{msg['button.delete']}" action="#{userView.deleteEntity}" ajax="false" />
+					</h:panelGrid>
+					
+				</p:panel>
+				<p:growl id="growl" showSummary="true" sticky="true" />
+			</h:form>
+
+			<h:panelGrid columns="1">
+				<p:dialog id="dialog" header="#{msg['editUser.updatePassword']}" widgetVar="dlg" modal="true">
+					<h:form>
+
+						<h:panelGrid columns="2" cellpadding="5">
+							<h:outputLabel for="passwordMod" value="#{msg['editUser.password']}:" />
+							<h:inputSecret value="#{userView.passwordMod}" id="passwordMod" label="passwordMod">
+
+								<f:validateLength minimum="6" maximum="15" />
+								<p:ajax event="blur" update="growlPsw" />
+
+							</h:inputSecret>
+
+							<h:outputLabel for="passwordModConf" value="#{msg['editUser.confirmation']}:" />
+							<h:inputSecret value="#{userView.passwordModConf}" id="passwordModConf" label="passwordModConf" validator="#{userView.comparePasswordModal}">
+								<p:ajax event="blur" update="growlPsw" />
+							</h:inputSecret>
+
+							<f:facet name="footer">
+								<p:commandButton id="Confirm" value="#{msg['button.confirm']}" action="#{userView.updatePasswordModal}" />
+							</f:facet>
+						</h:panelGrid>
+						<p:growl id="growlPsw" showSummary="true" life="5000" />
+					</h:form>
+				</p:dialog>
+			</h:panelGrid>
+
+			<h:panelGrid columns="1">
+				<p:dialog id="helpRole" header="#{msg['editUser.selectRole']}" widgetVar="dlgRol" modal="true">
+					<ui:include src="/pages/helpRoles.xhtml" />
+				</p:dialog>
+			</h:panelGrid>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

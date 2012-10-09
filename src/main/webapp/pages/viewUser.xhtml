@@ -1,0 +1,122 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head></h:head>
+
+<h:body>
+	<f:metadata>
+		<f:event type="preRenderView" listener="#{userView.preLoad}" />
+		<f:event type="postAddToView" listener="#{userView.postLoad}" />
+	</f:metadata>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="title">#{msg['viewUser.title']}</ui:define>
+		<ui:define name="content">
+			<h:form id="formUsu">
+				<p:panel header="#{msg['viewUser.header']}">
+					<h:panelGrid columns="6">
+						<h:outputText value="#{msg['viewUser.login']}: " />
+						<p:inputText value="#{userView.login}" />
+
+						<h:outputText value="#{msg['viewUser.name']}: " />
+						<p:inputText value="#{userView.name}" />
+
+					</h:panelGrid>
+					<h:panelGrid columns="1" styleClass="custom">
+						<p:fieldset legend="#{msg['viewUser.advancedSearch']}" toggleable="true" collapsed="true" toggleSpeed="1" id="advanced" styleClass="searchButton">
+							<p:ajax event="toggle" listener="#{userView.handleToggle}" update="advanced" />
+							<h:panelGrid columns="14">
+								<h:outputText value="#{msg['viewUser.language']}: " />
+								<p:selectOneMenu id="language" value="#{userView.language}">
+									<f:selectItem itemLabel="#{msg['viewUser.all']}" itemValue="" />
+									<f:selectItems value="#{userView.languages}" />
+								</p:selectOneMenu>
+
+								<h:outputLabel for="role" value="#{msg['viewUser.role']} : " />
+								<p:inputText id="role" value="#{userView.searchRole}">
+								</p:inputText>
+								<p:commandButton id="effectsDialogButton" icon="ui-icon-search" title="#{msg['viewUser.helpRole']}" onclick="dlgRol.show();" type="button" />
+							</h:panelGrid>
+						</p:fieldset>
+					</h:panelGrid>
+					<table>
+						<tr>
+							<td width="98%"></td>
+							<td><p:commandButton value="#{msg['button.search']}" icon="ui-icon-search" update=":formUsu:users" actionListener="#{userView.search}" ajax="true" /></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+						</tr>
+					</table>
+
+					<p:dataTable id="users" var="user" value="#{userView.entities}" widgetVar="TableUser" rows="5" paginator="true" selection="#{userView.selectedEntity}"
+						paginatorPosition="bottom" paginatorAlwaysVisible="false" selectionMode="single" rowKey="#{user.id}" filteredValue="#{userView.filteredEntities}"
+						emptyMessage="#{msg['viewUser.msgNoCriteriaUser']}" lazy="true">
+
+						<f:facet name="header">
+							<h:panelGrid columns="3" styleClass="buttonRow">
+								<p:button icon="ui-icon-document" outcome="addUser" />
+								<p:commandButton icon="ui-icon-search" actionListener="#{userView.viewEntity}" />
+								<p:commandButton icon="ui-icon-trash" onclick="confirmation.show()" type="button" />
+							</h:panelGrid>
+						</f:facet>
+
+						<p:ajax event="rowDblselect" listener="#{userView.onRowDblselect}" />
+
+						<p:column sortBy="#{user.login}">
+							<f:facet name="header">
+								<h:outputText value="#{msg['viewUser.login']}" />
+							</f:facet>
+							<h:outputText value="#{user.login}"></h:outputText>
+						</p:column>
+
+						<p:column sortBy="#{user.name}">
+							<f:facet name="header">
+								<h:outputText value="#{msg['viewUser.name']}" />
+							</f:facet>
+							<h:outputText value="#{user.name}"></h:outputText>
+						</p:column>
+
+						<p:column sortBy="#{user.email}">
+							<f:facet name="header">
+								<h:outputText value="#{msg['viewUser.email']}" />
+							</f:facet>
+							<h:outputText value="#{user.email}"></h:outputText>
+						</p:column>
+
+						<p:column sortBy="#{user.language}">
+							<f:facet name="header">
+								<h:outputText value="#{msg['viewUser.language']}" />
+							</f:facet>
+							<h:outputText value="#{user.language == 'S' ? msg['language.spanish'] : user.language == 'E' ? msg['language.english'] : msg['language.french']}"></h:outputText>
+						</p:column>
+
+						<p:column sortBy="#{user.role}">
+							<f:facet name="header">
+								<h:outputText value="#{msg['viewUser.role']}" />
+							</f:facet>
+							<h:outputText value="#{user.role.name}"></h:outputText>
+						</p:column>
+
+					</p:dataTable>
+				</p:panel>
+				<p:growl id="growl" showSummary="true" sticky="true" />
+				<p:confirmDialog id="confirmDialog" message="#{msg['viewUser.msgDelConfirm']}" header="#{msg['viewUser.msgDelHeader']}" severity="alert" widgetVar="confirmation">
+
+					<p:commandButton id="confirm" value="#{msg['button.yes']}" update="@form" oncomplete="confirmation.hide()" actionListener="#{userView.deleteEntity}" />
+					<p:commandButton id="decline" value="N#{msg['button.no']}" onclick="confirmation.hide()" type="button" />
+
+				</p:confirmDialog>
+
+			</h:form>
+
+			<h:panelGrid columns="1">
+				<p:dialog id="helpRole" header="#{msg['addUser.selectRole']}" widgetVar="dlgRol" modal="true">
+					<ui:include src="/pages/helpRoles.xhtml" />
+				</p:dialog>
+			</h:panelGrid>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+
+</html>

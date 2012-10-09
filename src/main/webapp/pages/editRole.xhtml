@@ -1,0 +1,60 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<f:metadata>
+		<f:event type="preRenderView" listener="#{roleView.updatePickList}" />
+	</f:metadata>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="title">#{msg['editRole.title']}</ui:define>
+		<ui:define name="content">
+			<h:form>
+				<p:panel id="panel" header="#{msg['editRole.header']}">
+					<h:panelGrid columns="3">
+						<h:outputLabel for="name" value="#{msg['editRole.name']} : " />
+						<p:inputText id="name" value="#{roleView.selectedEntity.name}"
+							required="true"  requiredMessage="#{msg['msgRole.msgRequiredName']}">
+							<f:validateLength minimum="3" />
+							<p:ajax event="blur" update="growl" />
+						</p:inputText>
+						<h:outputText />
+
+						<h:outputLabel for="Description"
+							value="#{msg['editRole.description']} : " />
+						<p:inputTextarea rows="5" cols="30" id="Description"
+							value="#{roleView.selectedEntity.description}" required="true" 
+							requiredMessage="#{msg['msgRole.msgRequiredDescription']}"
+							maxlength="300" autoResize="false">
+							<f:validateLength minimum="5" />
+							<p:ajax event="blur" update="growl" />
+						</p:inputTextarea>
+						<h:outputText />
+
+					</h:panelGrid>
+
+					<p:pickList id="listRole" value="#{roleView.screens}" var="screen"
+						itemLabel="#{screen.name}" itemValue="#{screen}"
+						showSourceFilter="true" showTargetFilter="true"
+						filterMatchMode="contains" converter="pantallaPickListConverter">
+						<f:facet name="sourceCaption">#{msg['editRole.availableScreens']}</f:facet>
+						<f:facet name="targetCaption">#{msg['editRole.assignedScreens']}</f:facet>
+					</p:pickList>
+
+					<h:panelGrid columns="2">
+						<p:commandButton id="Update" value="#{msg['button.update']}"
+							action="#{roleView.updateEntity}" ajax="false" />
+						<p:commandButton id="delete" value="#{msg['button.delete']}"
+							action="#{roleView.deleteEntity}" ajax="false" />
+					</h:panelGrid>
+
+				</p:panel>
+				<p:growl id="growl" showSummary="true" sticky="true" />
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,134 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<f:metadata>
+		<f:event type="preRenderView" listener="#{userView.preLoad}" />
+		<f:event type="preRenderView" listener="#{userView.insertPickList}" />
+	</f:metadata>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="title">#{msg['addUser.title']}</ui:define>
+		<ui:define name="content">
+			<h:form id="formUsu">
+				<p:panel id="panel" header="#{msg['addUser.header']}">
+					<h:panelGrid columns="3">
+						<h:outputLabel for="login" value="#{msg['addUser.login']} : " />
+						<p:inputText id="login" value="#{userView.login}" required="true" requiredMessage="#{msg['msgUser.msgRequiredLogin']}">
+							<f:validateLength minimum="5" />
+							<p:ajax event="blur" update="growl" />
+						</p:inputText>
+						<h:outputText></h:outputText>
+			
+						<h:outputLabel for="name" value="#{msg['addUser.name']} : " />
+						<p:inputText id="name" value="#{userView.name}" required="true" requiredMessage="#{msg['msgUser.msgRequiredName']}">
+							<f:validateLength minimum="2" />
+							<p:ajax event="blur" update="growl" />
+						</p:inputText>
+						<h:outputText></h:outputText>
+
+						<h:outputLabel for="surnames" value="#{msg['addUser.surnames']} : " />
+						<p:inputText id="surnames" value="#{userView.surnames}" required="true" requiredMessage="#{msg['msgUser.msgRequiredSurnames']}">
+							<f:validateLength minimum="5" />
+							<p:ajax event="blur" update="growl" />
+						</p:inputText>
+						<h:outputText></h:outputText>
+						
+						<h:outputLabel for="email" value="#{msg['addUser.email']} : " />
+						<p:inputText id="email" value="#{userView.email}" required="true" requiredMessage="#{msg['msgUser.msgRequiredEmail']}">
+							<f:validateLength minimum="5" />
+							<p:ajax event="blur" update="growl" />
+						</p:inputText>
+						<h:outputText></h:outputText>
+
+						<h:outputLabel for="password" value="#{msg['addUser.password']} : " />
+						<p:password id="password" value="#{userView.password}" validatorMessage="#{msg['msgUser.passwordNotRegex']}" redisplay="true" required="true" requiredMessage="#{msg['msgUser.msgRequiredPassword']}" feedback="true" immediate="true" promptLabel="#{msg['password.enter']}" weakLabel="#{msg['password.weak']}"  
+                        goodLabel="#{msg['password.good']}" strongLabel="#{msg['password.strong']}">
+							<f:validateLength minimum="6" maximum="15" />
+							<f:validateRegex pattern="^(?=.*\d)(?=.*[A-Z]).*" />
+							<p:ajax event="blur" update="growl" />
+						</p:password>
+						<h:outputText></h:outputText>
+
+						<h:outputLabel for="passwordConf" value="#{msg['addUser.confirmPass']} : " />
+						<p:password id="passwordConf" value="#{userView.passwordConf}" required="true" requiredMessage="#{msg['msgUser.msgRequiredPassword']}" >
+							<p:ajax event="blur" update="growl" />
+						</p:password>
+						<h:outputText></h:outputText>
+
+						<h:outputLabel for="language" value="#{msg['addUser.language']} : " />
+						<p:selectOneMenu id="language" value="#{userView.language}" required="true" requiredMessage="#{msg['msgUser.msgRequiredLanguage']}">
+							<f:selectItem itemLabel="#{msg['addUser.selectLanguage']}" itemValue="" />
+							<f:selectItems value="#{userView.languages}" />
+						</p:selectOneMenu>
+						<h:outputText></h:outputText>
+
+						<h:outputLabel for="status" value="#{msg['addUser.status']} : " />
+						<p:inputText id="status" value="#{userView.status}">
+							<p:ajax event="blur" update="growl" />
+						</p:inputText>
+						<h:outputText></h:outputText>
+
+						<h:outputLabel for="type" value="#{msg['addUser.type']} : " />
+						<p:selectOneMenu id="type" value="#{userView.type}" required="true" requiredMessage="#{msg['msgUser.msgRequiredType']}">
+							<f:selectItem itemLabel="#{msg['addUser.selectType']}" itemValue="" />
+							<f:selectItems value="#{userView.types}" />
+							<f:validateLength minimum="1" />
+							<p:ajax event="blur" update="growl"/>
+							<p:ajax event="change" update="pickList" />
+						</p:selectOneMenu>
+						<h:outputText></h:outputText>
+
+						<h:outputLabel for="activeSN" value="#{msg['addUser.active']} : " />
+						<p:selectBooleanButton id="activeSN" value="#{userView.activeSNBol}" onLabel="#{msg['button.yes']}" offLabel="#{msg['button.no']}" />
+						<h:outputText></h:outputText>
+
+						<h:outputLabel for="visibleSN" value="#{msg['addUser.visible']} : " />
+						<p:selectBooleanButton id="visibleSN" value="#{userView.visibleSNBol}" onLabel="#{msg['button.yes']}" offLabel="#{msg['button.no']}" />
+						<h:outputText></h:outputText>
+
+						<h:outputLabel for="role" value="#{msg['addUser.role']} : " />
+						<p:inputText id="role" disabled="true" value="#{userView.role.name}">
+							<p:ajax event="blur" update="growl" />
+						</p:inputText>
+						<p:commandButton id="effectsDialogButton" icon="ui-icon-search" title="#{msg['addUser.helpRole']}" onclick="dlgRol.show();" type="button" />
+						<p:message id="roleMsg" for="role" display="icon" />
+				</h:panelGrid>
+				
+				<h:panelGroup id="pickList">
+					<p:pickList id="listUser" value="#{userView.customers}" var="customer"
+							itemLabel="#{customer.name}" itemValue="#{customer}"
+							showSourceFilter="true" showTargetFilter="true"
+							filterMatchMode="contains" converter="clientePickListConverter"
+							styleClass="pickList" rendered="#{userView.type eq 'P'}">
+							
+							<f:facet name="sourceCaption">#{msg['addUser.availableCustomers']}</f:facet>
+							<f:facet name="targetCaption">#{msg['addUser.assignedCustomers']}</f:facet>
+					</p:pickList>
+				</h:panelGroup>
+				
+				<h:panelGrid columns="2">
+						<p:commandButton id="addUser" value="#{msg['button.submit']}" action="#{userView.addUser}" ajax="false" />
+						<p:commandButton id="reset" value="#{msg['button.reset']}" action="#{userView.reset}" ajax="false" />
+				</h:panelGrid>
+				</p:panel>
+				<p:growl id="growl" showSummary="true" sticky="true" />
+			</h:form>
+			<h:panelGrid columns="1">
+				<p:dialog id="helpRole" header="#{msg['addUser.selectRole']}" widgetVar="dlgRol" modal="true">
+					<ui:include src="/pages/helpRoles.xhtml" />
+				</p:dialog>
+			</h:panelGrid>
+		</ui:define>
+	</ui:composition>
+</h:body>
+
+</html>
+
+
+
+
+
+

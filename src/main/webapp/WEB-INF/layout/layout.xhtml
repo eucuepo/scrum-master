@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title><ui:insert name="title">Default Title</ui:insert></title>
+	<link rel="stylesheet" type="text/css" href="./css/main.css" />
+	<link rel="stylesheet" type="text/css" href="./fonts/fonts.css" />
+</h:head>
+
+<h:body>
+
+	<f:view id="locale" locale="#{loginView.loginService.localeUser}" />
+
+	<div id="header">
+		<ui:insert name="header">
+			<ui:include src="header.xhtml" />
+		</ui:insert>
+	</div>
+	<div class="headerButtons">
+		<p:commandLink action="viewUser?faces-redirect=true" styleClass="button">Mantenimiento usuarios</p:commandLink>
+		<p:commandLink action="toDo" styleClass="button">To Do</p:commandLink>
+		<div class="loginDetails">
+				<span class="texto_cabecera">
+					<b>#{msg['header.user']}:</b> #{loginView.sessionUser.name}
+				</span>
+			</div>
+	</div>
+	<div id="left">
+		<ui:insert name="navigation">
+			<ui:include src="navigation.xhtml" />
+		</ui:insert>
+	</div>
+
+
+	<div id="center">
+		<ui:insert name="content">
+			<div>
+				<ui:include src="center.xhtml" />
+			</div>
+		</ui:insert>
+	</div>
+</h:body>
+</html>
+

@@ -1,0 +1,41 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head></h:head>
+
+<h:body>
+	<h:form>
+		<p:dataTable id="roles" var="role" value="#{roleView.entities}"
+			widgetVar="TableRoles" rows="5" paginator="true"
+			selection="#{roleView.selectedEntity}" paginatorPosition="bottom"
+			paginatorAlwaysVisible="false" selectionMode="single"
+			rowKey="#{role.id}"
+			emptyMessage="#{msg['helpRoles.msgNoCriteriaRoles']}" lazy="true">
+
+			<p:ajax event="rowDblselect"
+				listener="#{roleView.onRowDblselectHelp}"
+				oncomplete="dlgRol.hide();" update=":formUsu:role" />
+
+			<p:column id="name" sortBy="#{role.name}" filterBy="#{role.name}">
+				<f:facet name="header">
+					<h:outputText value="#{msg['helpRoles.name']}" />
+				</f:facet>
+				<h:outputText value="#{role.name}"></h:outputText>
+			</p:column>
+
+			<p:column id="description" sortBy="#{role.description}"
+				filterBy="#{role.description}">
+				<f:facet name="header">
+					<h:outputText value="#{msg['helpRoles.description']}" />
+				</f:facet>
+				<h:outputText value="#{role.description}"></h:outputText>
+			</p:column>
+		</p:dataTable>
+
+	</h:form>
+
+</h:body>
+
+</html>

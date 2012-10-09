@@ -1,0 +1,84 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="title">#{msg['viewRole.title']}</ui:define>
+		<ui:define name="content">
+			<h:form id="form">
+				<p:panel header="#{msg['viewRole.header']}">
+					<h:panelGrid columns="6">
+						<h:outputText value="#{msg['viewRole.name']}: " />
+						<p:autoComplete value="#{roleView.name}"
+							completeMethod="#{roleView.getRolesByName}" />
+
+						<h:outputText value="#{msg['viewRole.description']}: " />
+						<p:inputText value="#{roleView.description}" />
+
+					</h:panelGrid>
+					<table>
+						<tr>
+							<td width="98%"></td>
+							<td><p:commandButton value="#{msg['button.search']}"
+									icon="ui-icon-search" update="@form"
+									process="@form" actionListener="#{roleView.search}" ajax="true" /></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+						</tr>
+					</table>
+					<p:dataTable id="roles" var="role" value="#{roleView.entities}"
+						widgetVar="rolesTable" rows="5" paginator="true"
+						selection="#{roleView.selectedEntity}" paginatorPosition="bottom"
+						paginatorAlwaysVisible="false" selectionMode="single"
+						rowKey="#{role.id}" filteredValue="#{roleView.filteredEntities}"
+						emptyMessage="#{msg['viewRole.msgNoCriteriaRoles']}" lazy="true">
+
+						<f:facet name="header">
+							<h:panelGrid columns="3" styleClass="buttonRow">
+								<p:button icon="ui-icon-document" outcome="addRole" />
+								<p:commandButton icon="ui-icon-search"
+									actionListener="#{roleView.viewEntity}" />
+								<p:commandButton icon="ui-icon-trash"
+									onclick="confirmation.show()" type="button" />
+							</h:panelGrid>
+						</f:facet>
+
+						<p:ajax event="rowDblselect" listener="#{roleView.onRowDblselect}" />
+
+						<p:column sortBy="#{role.name}">
+							<f:facet name="header">
+								<h:outputText value="#{msg['viewRole.name']}" />
+							</f:facet>
+							<h:outputText value="#{role.name}"></h:outputText>
+						</p:column>
+
+						<p:column sortBy="#{role.description}">
+							<f:facet name="header">
+								<h:outputText value="#{msg['viewRole.description']}" />
+							</f:facet>
+							<h:outputText value="#{role.description}"></h:outputText>
+						</p:column>
+					</p:dataTable>
+				</p:panel>
+				<p:growl id="growl" showSummary="true" sticky="true" />
+				<p:confirmDialog id="confirmDialog"
+					message="#{msg['viewRole.msgDelConfirm']}"
+					header="#{msg['viewRole.msgDelHeader']}" severity="alert"
+					widgetVar="confirmation">
+					<p:commandButton id="confirm" value="#{msg['button.yes']}"
+						update="@form" oncomplete="confirmation.hide()"
+						actionListener="#{roleView.deleteEntity}" />
+					<p:commandButton id="decline" value="#{msg['button.no']}"
+						onclick="confirmation.hide()" type="button" />
+				</p:confirmDialog>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+
+</html>

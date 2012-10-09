@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/layout/layout-no-navigation.xhtml">
+	<ui:define name="title">ScrumMaster</ui:define>
+	<ui:define name="content">
+		<h:form name='f'>
+			<div class="loginPanel">
+				<div class="loginContainer">
+					<div class="loginEntrada">
+						<img src="./images/wildcat-big.png" />
+					</div>
+					<div class="loginForm">
+						<p:focus for="user" />
+						<p:growl id="growl" showSummary="true" sticky="true" />
+						<div class="loginTop">
+							<p class="textLogo">Scrum. Mastered.</p>
+						</div>
+						<div>
+							<h:outputLabel for="user" value="#{msg['loginService.user']} : " />
+						</div>
+						<div>
+							<p:inputText id="user" value="#{loginView.user}" maxlength="20"
+								size="30">
+								<f:validateLength minimum="5" />
+							</p:inputText>
+						</div>
+						<div>
+							<h:outputLabel for="password"
+								value="#{msg['loginService.password']} : " />
+						</div>
+						<div>
+							<p:password id="password" value="#{loginView.password}"
+								maxlength="15" size="30">
+								<f:validateLength minimum="5" />
+							</p:password>
+						</div>
+						<div>
+							<p:commandLink action="forgetPassword" styleClass="button"
+								onclick="dlgPass.show();">#{msg['loginService.forgetPassword']}</p:commandLink>
+							<p:commandButton id="login" styleClass="button" value="#{msg['loginService.login']}"
+								action="#{loginView.login}" ajax="false" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</h:form>
+		<p:dialog id="newPassword" widgetVar="dlgPass" modal="true"
+			header="#{msg['loginService.resetPassword']}">
+			<ui:include src="/pages/fordwardPassword.xhtml" />
+		</p:dialog>
+	</ui:define>
+</ui:composition>
+</html>

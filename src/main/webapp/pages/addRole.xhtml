@@ -1,0 +1,54 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:body>
+	<f:metadata>
+		<f:event type="preRenderView" listener="#{roleView.insertPickList}" />
+	</f:metadata>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="title">#{msg['addRole.title']}</ui:define>
+		<ui:define name="content">
+			<h:form>
+				<p:panel id="panel" header="#{msg['addRole.header']}">
+					<h:panelGrid columns="3">
+						<h:outputLabel for="name" value="#{msg['addRole.name']} : " />
+						<p:inputText id="name" value="#{roleView.name}" required="true" requiredMessage="#{msg['msgRole.msgRequiredName']}">
+							<f:validateLength minimum="3" />
+							<p:ajax event="blur" update="growl" />
+						</p:inputText>
+						<h:outputText />
+
+						<h:outputLabel for="Description"
+							value="#{msg['addRole.description']} : " />
+						<p:inputTextarea rows="5" cols="30" id="Description"
+							value="#{roleView.description}" required="true"  maxlength="300"
+							autoResize="false" requiredMessage="#{msg['msgRole.msgRequiredDescription']}">
+							<f:validateLength minimum="5" />
+							<p:ajax event="blur" update="growl" />
+						</p:inputTextarea>
+						<h:outputText />
+					</h:panelGrid>
+					<p:pickList id="listRole" value="#{roleView.screens}" var="screen"
+						itemLabel="#{screen.name}" itemValue="#{screen}"
+						showSourceFilter="true" showTargetFilter="true"
+						filterMatchMode="contains" converter="pantallaPickListConverter">
+
+						<f:facet name="sourceCaption">#{msg['addRole.availableScreens']}</f:facet>
+						<f:facet name="targetCaption">#{msg['addRole.assignedScreens']}</f:facet>
+
+					</p:pickList>
+					<h:panelGrid columns="3">
+						<p:commandButton id="addRol" value="#{msg['button.submit']}"
+							action="#{roleView.addRole}" ajax="false" />
+						<p:commandButton id="reset" value="#{msg['button.reset']}"
+							action="#{roleView.reset}" ajax="false" />
+					</h:panelGrid>
+					<p:growl id="growl" showSummary="true" sticky="true" />
+				</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

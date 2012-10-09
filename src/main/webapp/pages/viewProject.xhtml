@@ -1,0 +1,73 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<f:metadata>
+		<f:event type="preRenderView" listener="#{projectView.preLoad}" />
+	</f:metadata>
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="title">Project #{projectView.project.name}</ui:define>
+		<ui:define name="content">
+			<h:form id="formUsu">
+				<p:panel id="panel">
+					<h:outputLabel styleClass="contentTitle" value="#{projectView.project.name}" />
+					<ui:repeat var="release" value="#{projectView.project.releaseList}">
+						<f:facet name="header">#{projectView.project.name}</f:facet>
+						<p:columnGroup type="header">
+							<p:row>
+								<p:column colspan="4" headerText="Proyecto #{projectView.project.name}" />
+							</p:row>
+						</p:columnGroup>
+						<p:dataTable var="sprint" value="#{release.sprintList}">
+							<f:facet name="header">Release: #{release.name}</f:facet>
+							<p:columnGroup type="header">
+								<p:row>
+									<p:column headerText="Detalle" />
+									<p:column headerText="Descripcion" />
+									<p:column headerText="Fecha inicia" />
+									<p:column headerText="Fecha fin" />
+								</p:row>
+							</p:columnGroup>
+							<p:column>
+								<p:rowToggler></p:rowToggler>
+							</p:column>
+							<p:column headerText="Descripcion">#{sprint.description}</p:column>
+							<p:column headerText="Fecha inicio">#{sprint.startDate}</p:column>
+							<p:column headerText="Fecha fin">#{sprint.finishDate}</p:column>
+							<p:rowExpansion>
+								<p:dataTable var="task" value="#{sprint.taskList}">
+									<f:facet name="header">Sprint: #{sprint.name}</f:facet>
+									<p:columnGroup type="header">
+										<p:row>
+											<p:column headerText="ID" />
+											<p:column headerText="Nombre" />
+											<p:column headerText="Horas estimadas" />
+										</p:row>
+									</p:columnGroup>
+									<p:column headerText="Descripcion">#{task.order}</p:column>
+									<p:column headerText="Fecha inicio">#{task.name}</p:column>
+									<p:column headerText="Fecha fin">#{task.estimatedHours}</p:column>
+								</p:dataTable>
+							</p:rowExpansion>
+						</p:dataTable>
+					</ui:repeat>
+					<h:panelGrid columns="3">
+						<h:outputLabel for="name" value="#{msg['editUser.name']} : " />
+						<p:inputText id="name" value="#{projectView.project.name}" required="true" requiredMessage="#{msg['msgUser.msgRequiredName']}">
+							<f:param></f:param>
+							<f:validateLength minimum="2" />
+							<p:ajax event="blur" update="growl" />
+						</p:inputText>
+						<h:outputText />
+					</h:panelGrid>
+					<h:panelGrid columns="2">
+						<p:commandButton id="Update" value="#{msg['button.update']}" action="#{projectView.updateEntity}" ajax="false" />
+						<p:commandButton id="delete" value="#{msg['button.delete']}" action="#{projectView.deleteEntity}" ajax="false" />
+					</h:panelGrid>
+				</p:panel>
+				<p:growl id="growl" showSummary="true" sticky="true" />
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>
